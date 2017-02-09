@@ -30,6 +30,7 @@ window.onload = function() {
     var text;
     var score= 0;
     var points;
+    var game_over= false;
     
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
@@ -96,7 +97,9 @@ window.onload = function() {
         // new trajectory.
         //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
         points.text= "Score: "+ score;
+        if(game_over== false){
 		score+= 1;
+		}
         asteriod.x = game.input.x;
 
     if (asteriod.x < 28)
@@ -115,6 +118,7 @@ function astriod_on_earth(asteriod,earth){
     asteriod.kill();
     earth.kill();
     text.visible = true;
+    game_over= true;
     }
  
 
