@@ -21,6 +21,164 @@ window.onload = function() {
         game.load.image( 'asteriod', 'assets/asteroid.png' );
     }
     
+    var bouncy;
+    var earth;
+    var asteriod;
+    var earth_asteriod = false;
+    var text;
+    
+    function create() {
+        // Create a sprite at the center of the screen using the 'logo' image.
+        game.physics.startSystem(Phaser.Physics.ARCADE);
+        earth = game.add.sprite( game.world.centerX, 100, 'earth' );
+        //sprites = game.add.physicsGroup(Phaser.Physics.ARCADE);
+        earth.physicsBodyType = Phaser.Physics.ARCADE;
+        
+        //earth = game.add.tileSprite(0,0,800,600,'earth');
+        //asteriod = game.add.sprite( game.world.centerX, game.world.centerY, 'asteriod' );
+        asteriod = game.add.sprite(game.world.centerX, 500, 'asteriod');
+        
+    asteriod.anchor.setTo(0.5, 0.5);
+
+    game.physics.enable(asteriod, Phaser.Physics.ARCADE);
+    asteriod.body.collideWorldBounds = true;
+    asteriod.body.immovable = true;
+        // Anchor the sprite at its center, as opposed to its top-left corner.
+        // so it will be truly centered.
+        //bouncy.anchor.setTo( 0.5, 0.5 );
+        
+        // Turn on the arcade physics engine for this sprite.
+        //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
+        // Make it bounce off of the world bounds.
+        //bouncy.body.collideWorldBounds = true;
+        
+        // Add some text using a CSS style.
+        // Center it in X, and position its top 15 pixels from the top of the world.
+        var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
+        //var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
+        //text.anchor.setTo( 0.5, 0.0 );
+        //text = game.add.text(game.world.centerX, 400, 'click to start', style);
+    }
+    
+    function update() {
+        // Accelerate the 'logo' sprite towards the cursor,
+        // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
+        // in X or Y.
+        // This function returns the rotation angle that makes it visually match its
+        // new trajectory.
+        //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
+        asteriod.x = game.input.x;
+
+    if (asteriod.x < 28)
+    {
+        asteriod.x = 28;
+    }
+    else if (asteriod.x > game.width - 28)
+    {
+        asteriod.x = game.width - 28;
+    }
+    game.physics.arcade.overlap(earth, asteriod, astriod_on_earth, null, this);
+        
+    
+    }
+function astriod_on_earth(asteriod,earth){
+    asteriod.kill();
+    }
+    
+
+    
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*window.onload = function() {
+    // You might want to start with a template that uses GameStates:
+    //     https://github.com/photonstorm/phaser/tree/v2.6.2/resources/Project%20Templates/Basic
+    
+    // You can copy-and-paste the code from any of the examples at http://examples.phaser.io here.
+    // You will need to change the fourth parameter to "new Phaser.Game()" from
+    // 'phaser-example' to 'game', which is the id of the HTML element where we
+    // want the game to go.
+    // The assets (and code) can be found at: https://github.com/photonstorm/phaser/tree/master/examples/assets
+    // You will need to change the paths you pass to "game.load.image()" or any other
+    // loading functions to reflect where you are putting the assets.
+    // All loading functions will typically all be found inside "preload()".
+    
+    "use strict";
+    
+    var game = new Phaser.Game( 800, 600, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
+    
+    function preload() {
+        // Load an image and call it 'logo'.
+        game.load.image( 'earth', 'assets/Earth.png' );
+        game.load.image( 'asteriod', 'assets/asteroid.png' );
+    }
+    
     var earth;
     var asteriod;
     
@@ -30,7 +188,7 @@ window.onload = function() {
         asteriod = game.add.sprite( game.world.centerX, game.world.centerY, 'asteriod' );
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
-        //bouncy.anchor.setTo( 0.5, 0.5 );
+        earth.anchor.setTo( 0.5, 0.5 );
         
         // Turn on the arcade physics engine for this sprite.
         //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
@@ -50,10 +208,10 @@ window.onload = function() {
         // in X or Y.
         // This function returns the rotation angle that makes it visually match its
         // new trajectory.
-        //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
+        earth.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
         
         
-        asteriod.body.velocity.x = 0;
+       /* asteriod.body.velocity.x = 0;
 		asteriod.body.velocity.y = 0;
         if (game.input.keyboard.isDown(Phaser.Keyboard.LEFT))
     {
@@ -79,4 +237,4 @@ window.onload = function() {
 		}
     
     }
-};
+};*/
