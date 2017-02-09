@@ -17,32 +17,37 @@ window.onload = function() {
     
     function preload() {
         // Load an image and call it 'logo'.
-        game.load.image( 'earth', 'assets/Earth.png' );
-        game.load.image( 'asteriod', 'assets/asteroid.png' );
+        game.load.image( 'asteriod', 'assets/Earth.png' );
+        game.load.image( 'earth', 'assets/asteroid.png' );
+        game.load.image( 'stars', 'assets/stars.png' );
     }
     
     var bouncy;
     var earth;
     var asteriod;
+    var stars;
     var earth_asteriod = false;
     var text;
+    var score= 0;
+    var points;
     
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        earth = game.add.sprite( game.world.centerX, 100, 'earth' );
-        //sprites = game.add.physicsGroup(Phaser.Physics.ARCADE);
-        earth.physicsBodyType = Phaser.Physics.ARCADE;
+        game.add.tileSprite(0, 0, 1000, 600, 'stars');
         
-        //earth = game.add.tileSprite(0,0,800,600,'earth');
-        //asteriod = game.add.sprite( game.world.centerX, game.world.centerY, 'asteriod' );
+        earth = game.add.sprite( game.world.centerX, 100, 'earth' );
         asteriod = game.add.sprite(game.world.centerX, 500, 'asteriod');
         
-    asteriod.anchor.setTo(0.5, 0.5);
-
-    game.physics.enable(asteriod, Phaser.Physics.ARCADE);
-    asteriod.body.collideWorldBounds = true;
-    asteriod.body.immovable = true;
+        
+        asteriod.anchor.setTo(0.5, 0);
+        game.physics.enable(asteriod, Phaser.Physics.ARCADE);
+        game.physics.enable(earth, Phaser.Physics.ARCADE);
+        earth.body.velocity.setTo(300,300);
+        earth.body.collideWorldBounds = true;
+        earth.body.bounce.set(1);
+        asteriod.body.collideWorldBounds = true;
+        asteriod.body.immovable = true;
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
         //bouncy.anchor.setTo( 0.5, 0.5 );
@@ -51,14 +56,37 @@ window.onload = function() {
         //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
         // Make it bounce off of the world bounds.
         //bouncy.body.collideWorldBounds = true;
-        
+		//bounce_earth();
         // Add some text using a CSS style.
         // Center it in X, and position its top 15 pixels from the top of the world.
         var style = { font: "25px Verdana", fill: "#9999ff", align: "center" };
-        //var text = game.add.text( game.world.centerX, 15, "Build something amazing.", style );
-        //text.anchor.setTo( 0.5, 0.0 );
-        //text = game.add.text(game.world.centerX, 400, 'click to start', style);
+        points = game.add.text(0,0,'Score:', style);
+        text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over', style);
+		text.visible = false;
     }
+    /*
+    function create() {
+
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    //  This creates a simple sprite that is using our loaded image and
+    //  displays it on-screen
+    //  and assign it to a variable
+    image = game.add.sprite(0, 0, 'flyer');
+
+    game.physics.enable(image, Phaser.Physics.ARCADE);
+    
+    //  This gets it moving
+    image.body.velocity.setTo(200,200);
+    
+    //  This makes the game world bounce-able
+    image.body.collideWorldBounds = true;
+    
+    //  This sets the image bounce energy for the horizontal 
+    //  and vertical vectors. "1" is 100% energy return
+    image.body.bounce.set(1);
+
+}*/
     
     function update() {
         // Accelerate the 'logo' sprite towards the cursor,
@@ -67,6 +95,8 @@ window.onload = function() {
         // This function returns the rotation angle that makes it visually match its
         // new trajectory.
         //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
+        points.text= "Score: "+ score;
+		score+= 1;
         asteriod.x = game.input.x;
 
     if (asteriod.x < 28)
@@ -83,8 +113,10 @@ window.onload = function() {
     }
 function astriod_on_earth(asteriod,earth){
     asteriod.kill();
+    earth.kill();
+    text.visible = true;
     }
-    
+ 
 
     
 };
