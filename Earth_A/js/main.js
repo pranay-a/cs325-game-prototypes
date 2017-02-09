@@ -44,7 +44,7 @@ window.onload = function() {
         asteriod.anchor.setTo(0.5, 0);
         game.physics.enable(asteriod, Phaser.Physics.ARCADE);
         game.physics.enable(earth, Phaser.Physics.ARCADE);
-        earth.body.velocity.setTo(300,300);
+        earth.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
         earth.body.collideWorldBounds = true;
         earth.body.bounce.set(1);
         asteriod.body.collideWorldBounds = true;
@@ -65,37 +65,12 @@ window.onload = function() {
         text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over', style);
 		text.visible = false;
     }
-    /*
-    function create() {
-
-    game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    //  This creates a simple sprite that is using our loaded image and
-    //  displays it on-screen
-    //  and assign it to a variable
-    image = game.add.sprite(0, 0, 'flyer');
-
-    game.physics.enable(image, Phaser.Physics.ARCADE);
     
-    //  This gets it moving
-    image.body.velocity.setTo(200,200);
-    
-    //  This makes the game world bounce-able
-    image.body.collideWorldBounds = true;
-    
-    //  This sets the image bounce energy for the horizontal 
-    //  and vertical vectors. "1" is 100% energy return
-    image.body.bounce.set(1);
-
-}*/
     
     function update() {
         // Accelerate the 'logo' sprite towards the cursor,
         // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
         // in X or Y.
-        // This function returns the rotation angle that makes it visually match its
-        // new trajectory.
-        //bouncy.rotation = game.physics.arcade.accelerateToPointer( bouncy, this.game.input.activePointer, 500, 500, 500 );
         points.text= "Score: "+ score;
         if(game_over== false){
 		score+= 1;
@@ -112,7 +87,6 @@ window.onload = function() {
     }
     game.physics.arcade.overlap(earth, asteriod, astriod_on_earth, null, this);
         
-    
     }
 function astriod_on_earth(asteriod,earth){
     asteriod.kill();
