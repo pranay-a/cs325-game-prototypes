@@ -17,9 +17,9 @@ window.onload = function() {
     
     function preload() {
         // Load an image and call it 'logo'.
-        game.load.image( 'asteriod', 'assets/Earth.png' );
-        game.load.image( 'earth', 'assets/asteroid.png' );
-        game.load.image( 'stars', 'assets/stars.png' );
+        game.load.image( 'good_guy', 'assets/good_guy.jpg' );
+        game.load.image( 'other_guy', 'assets/other_guy.jpg' );
+        game.load.image( 'background', 'assets/background.jpg' );
     }
     
     var bouncy;
@@ -32,26 +32,52 @@ window.onload = function() {
     var points;
     var game_over= false;
     
+    
+    
+    
+    
+    
+    
+    
+    var good_guy;
+    var other_guy;
+    var background;
+    var keys;
+    var space;
+    var bullets;
+    
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.add.tileSprite(0, 0, 1000, 600, 'stars');
+        game.add.tileSprite(0, 0, 1000, 600, 'background');
         
-        earth = game.add.sprite( game.world.centerX, 100, 'earth' );
-        asteriod = game.add.sprite(game.world.centerX, 500, 'asteriod');
+        good_guy = game.add.sprite(0, 600, 'good_guy' );
+        other_guy = game.add.sprite(700, 500, 'other_guy');
         
         
-        asteriod.anchor.setTo(0.5, 0);
-        game.physics.enable(asteriod, Phaser.Physics.ARCADE);
-        game.physics.enable(earth, Phaser.Physics.ARCADE);
-        earth.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
-        earth.body.collideWorldBounds = true;
-        earth.body.bounce.set(1);
-        asteriod.body.collideWorldBounds = true;
-        asteriod.body.immovable = true;
+        //asteriod.anchor.setTo(0.5, 0);
+        game.physics.enable(good_guy, Phaser.Physics.ARCADE);
+        game.physics.enable(other_guy, Phaser.Physics.ARCADE);
+        game.physics.arcade.enable(good_guy);
+        game.physics.arcade.enable(other_guy);
+        //earth.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+        good_guy.body.collideWorldBounds = true;
+        //earth.body.bounce.set(1);
+        other_guy.body.collideWorldBounds = true;
+        other_guy.body.immovable = true;
+        keys = game.input.keyboard.createCursorKeys();
+        space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
         //bouncy.anchor.setTo( 0.5, 0.5 );
+        bullets = game.add.group();
+    bullets.enableBody = true;
+    bullets.physicsBodyType = Phaser.Physics.ARCADE;
+    bullets.createMultiple(30, 'bullet');
+    bullets.setAll('anchor.x', 0.5);
+    bullets.setAll('anchor.y', 1);
+    bullets.setAll('outOfBoundsKill', true);
+    bullets.setAll('checkWorldBounds', true);
         
         // Turn on the arcade physics engine for this sprite.
         //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
@@ -75,22 +101,48 @@ window.onload = function() {
         if(game_over== false){
 		score+= 1;
 		}
-        asteriod.x = game.input.x;
+       good_guy.body.velocity.x = 0;
+    good_guy.body.velocity.y = 0;
 
-    if (asteriod.x < 28)
+    if (keys.left.isDown)
     {
-        asteriod.x = 28;
+        good_guy.body.velocity.x = -200;
+        good_guy.scale.x = -1;
     }
-    else if (asteriod.x > game.width - 28)
+    else if (keys.right.isDown)
     {
-        asteriod.x = game.width - 28;
+        good_guy.body.velocity.x = 200;
+        good_guy.scale.x = 1;
     }
-    game.physics.arcade.overlap(earth, asteriod, astriod_on_earth, null, this);
+
+    if (keys.up.isDown)
+    {
+        good_guy.body.velocity.y = -200;
+    }
+    else if (keys.down.isDown)
+    {
+        good_guy.body.velocity.y = 200;
+    }
+    if (space.isDown)
+    {
+        bullet();
+    }
         
     }
-function astriod_on_earth(asteriod,earth){
-    asteriod.kill();
-    earth.kill();
+function bullet(){
+       if (game.time.now > bulletTime)
+    {
+        //  Grab the first bullet we can from the pool
+        bullet = bullets.getFirstExists(false);
+
+        if (bullet)
+        {
+            //  And fire it
+            bullet.reset(player.x, player.y + 8);
+            bullet.body.velocity.y = -400;
+            bulletTime = game.time.now + 200;
+        }
+    }
     text.visible = true;
     game_over= true;
     }
