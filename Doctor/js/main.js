@@ -19,6 +19,7 @@ window.onload = function() {
         // Load an image and call it 'logo'.
         game.load.image( 'good_guy', 'assets/good_guy.jpg' );
         game.load.image( 'other_guy', 'assets/other_guy.jpg' );
+        game.load.image( 'bullet', 'assets/bullet.jpg' );
         game.load.image( 'background', 'assets/background.jpg' );
     }
     
@@ -44,8 +45,10 @@ window.onload = function() {
     var background;
     var keys;
     var space;
+    var tool;
     var bullets;
-    
+    var bullet;
+    var bullet_time= 0;
     function create() {
         // Create a sprite at the center of the screen using the 'logo' image.
         game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -70,6 +73,42 @@ window.onload = function() {
         // Anchor the sprite at its center, as opposed to its top-left corner.
         // so it will be truly centered.
         //bouncy.anchor.setTo( 0.5, 0.5 );
+        tool = game.add.weapon(30, 'bullet');
+        tool.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+
+    //  The speed at which the bullet is fired
+    tool.bulletSpeed = 600;
+
+    //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
+    tool.fireRate = 100;
+
+    
+
+
+    //  Tell the Weapon to track the 'player' Sprite
+    //  With no offsets from the position
+    //  But the 'true' argument tells the weapon to track sprite rotation
+    tool.trackSprite(good_guy, 0, 0, true);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -125,22 +164,23 @@ window.onload = function() {
     }
     if (space.isDown)
     {
-        bullet();
+        tool.fire();
     }
         
     }
-function bullet(){
-       if (game.time.now > bulletTime)
+function bullet_fire(){
+       if (game.time.now > bullet_time)
     {
         //  Grab the first bullet we can from the pool
-        bullet = bullets.getFirstExists(false);
+        bullet = bullets.getFirstDead(true, good_guy.x + 24 * good_guy.scale.x, good_guy.y + 8, 'bullet');
 
         if (bullet)
         {
             //  And fire it
-            bullet.reset(player.x, player.y + 8);
-            bullet.body.velocity.y = -400;
-            bulletTime = game.time.now + 200;
+            bullet.reset(good_guy.x, good_guy.y + 5); 
+            bullet.scale.x = -1;
+            bullet.body.velocity.x = 400;
+            bullet_time = game.time.now + 200;
         }
     }
     text.visible = true;
