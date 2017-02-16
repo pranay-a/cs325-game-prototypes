@@ -22,6 +22,7 @@ window.onload = function() {
     game.load.image( 'bullet', 'assets/bullet.jpg' );
     game.load.image( 'other_bullet', 'assets/other_bullet.jpg' );
     game.load.image( 'background', 'assets/background.jpg' );
+    game.load.audio('laser', 'assets/laser.wav');
   }
   
   var bouncy;
@@ -40,6 +41,7 @@ window.onload = function() {
   var bullet;
   var bullet_time= 0;
   var win_text;
+  var laser;
   function create() {
     // Create a sprite at the center of the screen using the 'logo' image.
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -93,7 +95,7 @@ window.onload = function() {
     other_tool.trackSprite(other_guy, 60, 50, true);
     
     
-    
+    laser = game.add.audio('laser');
     
     
     
@@ -159,6 +161,7 @@ window.onload = function() {
       if (space.isDown)
       {
         tool.fire();
+        laser.play();
       }
       
       game.physics.arcade.overlap(tool.bullets, other_guy, bullet_enemy, null, this);
