@@ -28,6 +28,7 @@ window.onload = function() {
     game.load.image( 'the_10_spades', 'assets/the_10_spades.png' );
     game.load.image( 'the_10_hearts', 'assets/the_10_hearts.png' );
     game.load.image( 'card_back', 'assets/card_back.png' );
+    game.load.image( 'background', 'assets/background.jpg' );
   }
   
   var bouncy;
@@ -42,10 +43,14 @@ window.onload = function() {
   var the_10_spades;
   var the_10_hearts;
   
-  
-  var xLocation = [230, 100, 70, 150, 180, 200, 220, 250, 170, 300, 140, 100, 200, 150, 300, 200, 180, 250, 120, 300];
-    var yLocation = [270, 600, 320, 600, 190, 600, 10, 600, 260, 600, 340, 650, 380, 650, 400, 650, 480, 650, 550, 650];
-    var clicked = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+  //                5s   qh   ks   10h   qs   9h   9s  5h    10s  kh
+  var xLocation = [100, 300, 200, 500, 300, 400, 400, 100, 500, 200];
+  var yLocation = [100, 200, 100, 200, 100, 200, 100, 200, 100, 200];
+  var clicked = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  var checker;
+  var cardsClicked = 0;
+  var image_w = 98;
+  var image_h = 98;
   
   
   
@@ -78,19 +83,43 @@ window.onload = function() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.tileSprite(0, 0, 1000, 600, 'background');
     
-    heart = game.add.sprite(xLocation[0], yLocation[0], 'cardBack');
+    the_5_spades = game.add.sprite(xLocation[0], yLocation[0], 'card_back');
+        the_5_hearts = game.add.sprite(xLocation[1], yLocation[1], 'card_back');
+        the_king_spades = game.add.sprite(xLocation[2], yLocation[2], 'card_back');
+        the_king_hearts = game.add.sprite(xLocation[3], yLocation[3], 'card_back');
+        the_queen_spades = game.add.sprite(xLocation[4], yLocation[4], 'card_back');
+        the_queen_hearts = game.add.sprite(xLocation[5], yLocation[5], 'card_back');
+        the_9_spades = game.add.sprite(xLocation[6], yLocation[6], 'card_back');
+        the_9_hearts = game.add.sprite(xLocation[7], yLocation[7], 'card_back');
+        the_10_spades = game.add.sprite(xLocation[8], yLocation[8], 'card_back');
+        the_10_hearts = game.add.sprite(xLocation[9], yLocation[9], 'card_back');
+        
+        
+        the_5_spades.inputEnabled = true;
+        the_5_hearts.inputEnabled = true;
+        the_king_spades.inputEnabled = true;
+        the_king_hearts.inputEnabled = true;
+        the_queen_spades.inputEnabled = true;
+        the_queen_hearts.inputEnabled = true;
+        the_9_spades.inputEnabled = true;
+        the_9_hearts.inputEnabled = true;
+        the_10_spades.inputEnabled = true;
+        the_10_hearts.inputEnabled = true;
+        
+        the_5_spades.events.onInputDown.add(listener, this);
+        the_5_hearts.events.onInputDown.add(listener, this);
+        the_king_spades.events.onInputDown.add(listener, this);
+        the_king_hearts.events.onInputDown.add(listener, this);
+        the_queen_spades.events.onInputDown.add(listener, this);
+        the_queen_hearts.events.onInputDown.add(listener, this);
+        the_9_spades.events.onInputDown.add(listener, this);
+        the_9_hearts.events.onInputDown.add(listener, this);
+        the_10_spades.events.onInputDown.add(listener, this);
+        the_10_hearts.events.onInputDown.add(listener, this);
+        
+        
     
     
-    
-    
-    
-    // Turn on the arcade physics engine for this sprite.
-    //game.physics.enable( bouncy, Phaser.Physics.ARCADE );
-    // Make it bounce off of the world bounds.
-    //bouncy.body.collideWorldBounds = true;
-    //bounce_earth();
-    // Add some text using a CSS style.
-    // Center it in X, and position its top 15 pixels from the top of the world.
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
     points = game.add.text(0,0,'Score:', style);
     text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over You Loose', style);
@@ -100,74 +129,123 @@ window.onload = function() {
   }
   
   
+  function listener() {
+        // Setting the mouse x and y position
+        var clickX = game.input.mousePointer.x;
+        var clickY = game.input.mousePointer.y;
+        cardsClicked++;
+        checkCard(clickX, clickY);
+        if(cardsClicked === 2){
+            cardsClicked = 0;
+            checkMatch();
+        }
+    }
+    
+    function checkCard(clickX, clickY) {
+        var count;
+        // Loop to see which card was clicked
+        for(count = 0; count < xLocation.length; count++){
+            if(xLocation[count] <= clickX && clickX <= xLocation[count]+image_w && yLocation[count] <= clickY && clickY <= yLocation[count]+image_h){
+                checker = count;
+                flipCard(checker);
+                break;
+            }
+        }
+    }
+    function checkMatch(){
+        // function to see if a match was found when two cards were clicked
+        var i;
+        for(i = 0; i < clicked.length; i+=2){
+            // If a match is found
+            if(clicked[i] === 1 && clicked[i+1] === 1){
+                // Order of card name in array
+                /*the_5_spades.events.onInputDown.add(listener, this);
+        the_5_hearts.events.onInputDown.add(listener, this);
+        the_king_spades.events.onInputDown.add(listener, this);
+        the_king_hearts.events.onInputDown.add(listener, this);
+        the_queen_spades.events.onInputDown.add(listener, this);
+        the_queen_hearts.events.onInputDown.add(listener, this);
+        the_9_spades.events.onInputDown.add(listener, this);
+        the_9_hearts.events.onInputDown.add(listener, this);
+        the_10_spades.events.onInputDown.add(listener, this);
+        the_10_hearts.events.onInputDown.add(listener, this);*/
+                if(i === 0){
+                    the_5_spades.inputEnabled = false;
+                    the_5_hearts.inputEnabled = false;
+                }else if(i === 2){
+                    the_king_spades.inputEnabled = false;
+                    the_king_hearts.inputEnabled = false;
+                }else if(i === 4){
+                    the_queen_spades.inputEnabled = false;
+                    the_queen_hearts.inputEnabled = false;
+                }else if(i === 6){
+                    the_9_spades.inputEnabled = false;
+                    the_9_hearts.inputEnabled = false;
+                }else if(i === 8){
+                    the_10_spades.inputEnabled = false;
+                    the_10_hearts.inputEnabled = false;
+                    }
+            }else{
+                // Set the cards back to the cardBack image
+                clicked[i] = 0;
+                clicked[i+1] = 0;
+                game.add.sprite(xLocation[i], yLocation[i], 'card_back');
+                game.add.sprite(xLocation[i+1], yLocation[i+1], 'card_back');
+            }
+        }
+    }
+    
+    function flipCard(checker1) {
+        // Change the card from the back of the card to the face of the card.
+        if(checker1 === 0){
+            the_5_spades = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_5_spades');
+        }else if(checker1 === 1){
+            the_5_hearts = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_5_hearts');
+        }else if(checker1 === 2){
+            the_king_spades = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_king_spades');
+        }else if(checker1 === 3){
+            the_king_hearts = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_king_hearts');
+        }else if(checker1 === 4){
+            the_queen_spades = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_queen_spades');
+        }else if(checker1 === 5){
+            the_queen_hearts = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_queen_hearts');
+        }else if(checker1 === 6){
+            the_9_spades = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_9_spades');
+        }else if(checker1 === 7){
+            the_9_hearts = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_9_hearts');
+        }else if(checker1 === 8){
+            the_10_spades = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_10_spades');
+        }else if(checker1 === 9){
+            the_10_hearts = game.add.sprite(xLocation[checker1], yLocation[checker1], 'the_10_hearts');
+        }
+        clicked[checker1] = 1;
+    }
+  
+  
   function update() {
     // Accelerate the 'logo' sprite towards the cursor,
     // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
     // in X or Y.
+    var i=0;
+    var all= false;
+    for(i=0; i< clicked.length; i++){
+        if(clicked[i]== 0){
+            break;
+            }
+        else if(clicked[i]== 1 && i== clicked.length-1){
+            all= true;
+            }
+        }
+        if(all== true){
+            game_over= true;
+            }
     points.text= "Score: "+ score;
     if(game_over== false){
       score+= 1;
-      if(Math.random()>.9){
-        other_tool.fire();
-      }
-      
-      good_guy.body.velocity.x = 0;
-      good_guy.body.velocity.y = 0;
-      
-      other_guy.body.velocity.x = 0;
-      other_guy.body.velocity.y = 0;
-      if(Math.random()>.5){
-        other_guy.body.velocity.y = Math.random()*1000;
-      }
-      else{
-        other_guy.body.velocity.y = -(Math.random()*1000);
-      }
-      if (keys.left.isDown)
-      {
-        good_guy.body.velocity.x = -200;
-        good_guy.scale.x = -1;
-      }
-      else if (keys.right.isDown)
-      {
-        good_guy.body.velocity.x = 200;
-        good_guy.scale.x = 1;
-      }
-      
-      if (keys.up.isDown)
-      {
-        good_guy.body.velocity.y = -200;
-      }
-      else if (keys.down.isDown)
-      {
-        good_guy.body.velocity.y = 200;
-      }
-      if (space.isDown)
-      {
-        tool.fire();
-        laser.play();
-      }
-      
-      game.physics.arcade.overlap(tool.bullets, other_guy, bullet_enemy, null, this);
-      game.physics.arcade.overlap(other_tool.bullets, good_guy, bullet_guy, null, this);
-      
     }
   }
-  function bullet_enemy(){
-    other_guy.kill();
-    win_text.visible = true;
-    game_over= true;
-    tool.bullets.visible= false;
-    other_tool.bullets.visible= false;
-  }
-  function bullet_guy(){
-    good_guy.kill();
-    text.visible = true;
-    game_over= true;
-    tool.bullets.visible= false;
-    other_tool.bullets.visible= false;
-  }
   
-  
+ 
   
   
 };
