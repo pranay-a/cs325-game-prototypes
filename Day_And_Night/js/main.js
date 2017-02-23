@@ -27,8 +27,9 @@ window.onload = function() {
     game.load.image( 'the_9_hearts', 'assets/the_9_hearts.png' );
     game.load.image( 'the_10_spades', 'assets/the_10_spades.png' );
     game.load.image( 'the_10_hearts', 'assets/the_10_hearts.png' );
-    game.load.image( 'card_back', 'assets/card_back.png' );
+    game.load.image( 'card_back', 'assets/card_back.jpg' );
     game.load.image( 'background', 'assets/background.jpg' );
+    game.load.image( 'good_guy', 'assets/player.jpg' );
   }
   
   var bouncy;
@@ -67,17 +68,7 @@ window.onload = function() {
   var points;
   var game_over= false;
   var good_guy;
-  var other_guy;
-  var background;
-  var keys;
-  var space;
-  var tool;
-  var other_tool;
-  var bullets;
-  var bullet;
-  var bullet_time= 0;
   var win_text;
-  var laser;
   function create() {
     // Create a sprite at the center of the screen using the 'logo' image.
     game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -95,6 +86,14 @@ window.onload = function() {
         the_10_hearts = game.add.sprite(xLocation[9], yLocation[9], 'card_back');
         
         
+        
+        good_guy = game.add.sprite(game.world.centerX, 500, 'good_guy');
+        good_guy.anchor.setTo(0.5, 0);
+        game.physics.enable(good_guy, Phaser.Physics.ARCADE);
+        good_guy.body.collideWorldBounds = true;
+        good_guy.body.immovable = true;
+        
+        
         the_5_spades.inputEnabled = true;
         the_5_hearts.inputEnabled = true;
         the_king_spades.inputEnabled = true;
@@ -106,16 +105,16 @@ window.onload = function() {
         the_10_spades.inputEnabled = true;
         the_10_hearts.inputEnabled = true;
         
-        the_5_spades.events.onInputDown.add(listener, this);
-        the_5_hearts.events.onInputDown.add(listener, this);
-        the_king_spades.events.onInputDown.add(listener, this);
-        the_king_hearts.events.onInputDown.add(listener, this);
-        the_queen_spades.events.onInputDown.add(listener, this);
-        the_queen_hearts.events.onInputDown.add(listener, this);
-        the_9_spades.events.onInputDown.add(listener, this);
-        the_9_hearts.events.onInputDown.add(listener, this);
-        the_10_spades.events.onInputDown.add(listener, this);
-        the_10_hearts.events.onInputDown.add(listener, this);
+        the_5_spades.events.onInputDown.add(clicked_l, this);
+        the_5_hearts.events.onInputDown.add(clicked_l, this);
+        the_king_spades.events.onInputDown.add(clicked_l, this);
+        the_king_hearts.events.onInputDown.add(clicked_l, this);
+        the_queen_spades.events.onInputDown.add(clicked_l, this);
+        the_queen_hearts.events.onInputDown.add(clicked_l, this);
+        the_9_spades.events.onInputDown.add(clicked_l, this);
+        the_9_hearts.events.onInputDown.add(clicked_l, this);
+        the_10_spades.events.onInputDown.add(clicked_l, this);
+        the_10_hearts.events.onInputDown.add(clicked_l, this);
         
         
     
@@ -129,7 +128,7 @@ window.onload = function() {
   }
   
   
-  function listener() {
+  function clicked_l() {
         // Setting the mouse x and y position
         var clickX = game.input.mousePointer.x;
         var clickY = game.input.mousePointer.y;
@@ -152,6 +151,7 @@ window.onload = function() {
             }
         }
     }
+    
     function checkMatch(){
         // function to see if a match was found when two cards were clicked
         var i;
@@ -159,16 +159,6 @@ window.onload = function() {
             // If a match is found
             if(clicked[i] === 1 && clicked[i+1] === 1){
                 // Order of card name in array
-                /*the_5_spades.events.onInputDown.add(listener, this);
-        the_5_hearts.events.onInputDown.add(listener, this);
-        the_king_spades.events.onInputDown.add(listener, this);
-        the_king_hearts.events.onInputDown.add(listener, this);
-        the_queen_spades.events.onInputDown.add(listener, this);
-        the_queen_hearts.events.onInputDown.add(listener, this);
-        the_9_spades.events.onInputDown.add(listener, this);
-        the_9_hearts.events.onInputDown.add(listener, this);
-        the_10_spades.events.onInputDown.add(listener, this);
-        the_10_hearts.events.onInputDown.add(listener, this);*/
                 if(i === 0){
                     the_5_spades.inputEnabled = false;
                     the_5_hearts.inputEnabled = false;
@@ -242,6 +232,19 @@ window.onload = function() {
     points.text= "Score: "+ score;
     if(game_over== false){
       score+= 1;
+    }
+    if(game_over== true){
+        win_text.visible = true;
+        }
+        good_guy.x = game.input.x;
+
+    if (good_guy.x < 28)
+    {
+        good_guy.x = 28;
+    }
+    else if (good_guy.x > game.width - 28)
+    {
+        good_guy.x = game.width - 28;
     }
   }
   
