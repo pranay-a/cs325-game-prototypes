@@ -109,7 +109,7 @@ window.onload = function() {
     
     var style = { font: "25px Verdana", fill: "#ffffff", align: "center" };
     points = game.add.text(0,0,'Score:', style);
-    text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over Try To Do It Faster', style);
+    text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over You Loose Try To Do It Faster', style);
     text.visible = false;
     win_text = game.add.text(game.world.centerX, game.world.centerY, 'Game Over You Win', style);
     win_text.visible = false;
