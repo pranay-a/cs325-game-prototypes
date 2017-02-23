@@ -17,15 +17,46 @@ window.onload = function() {
   
   function preload() {
     // Load an image and call it 'logo'.
-    game.load.image( 'good_guy', 'assets/good_guy.jpg' );
-    game.load.image( 'other_guy', 'assets/other_guy.jpg' );
-    game.load.image( 'bullet', 'assets/bullet.jpg' );
-    game.load.image( 'other_bullet', 'assets/other_bullet.jpg' );
-    game.load.image( 'background', 'assets/background.jpg' );
-    game.load.audio('laser', 'assets/laser.wav');
+    game.load.image( 'the_5_spades', 'assets/the_5_spades.png' );
+    game.load.image( 'the_5_hearts', 'assets/the_5_hearts.png' );
+    game.load.image( 'the_king_spades', 'assets/the_king_spades.png' );
+    game.load.image( 'the_king_hearts', 'assets/the_king_hearts.png' );
+    game.load.image( 'the_queen_spades', 'assets/the_queen_spades.png' );
+    game.load.image( 'the_queen_hearts', 'assets/the_queen_hearts.png' );
+    game.load.image( 'the_9_spades', 'assets/the_9_spades.png' );
+    game.load.image( 'the_9_hearts', 'assets/the_9_hearts.png' );
+    game.load.image( 'the_10_spades', 'assets/the_10_spades.png' );
+    game.load.image( 'the_10_hearts', 'assets/the_10_hearts.png' );
+    game.load.image( 'card_back', 'assets/card_back.png' );
   }
   
   var bouncy;
+  var the_5_spades;
+  var the_5_hearts;
+  var the_king_spades;
+  var the_king_hearts;
+  var the_queen_spades;
+  var the_queen_hearts;
+  var the_9_spades;
+  var the_9_hearts;
+  var the_10_spades;
+  var the_10_hearts;
+  
+  
+  var xLocation = [230, 100, 70, 150, 180, 200, 220, 250, 170, 300, 140, 100, 200, 150, 300, 200, 180, 250, 120, 300];
+    var yLocation = [270, 600, 320, 600, 190, 600, 10, 600, 260, 600, 340, 650, 380, 650, 400, 650, 480, 650, 550, 650];
+    var clicked = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   var text;
   var score= 0;
   var points;
@@ -47,55 +78,7 @@ window.onload = function() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.add.tileSprite(0, 0, 1000, 600, 'background');
     
-    good_guy = game.add.sprite(0, 600, 'good_guy' );
-    other_guy = game.add.sprite(700, 500, 'other_guy');
-    
-    
-    //asteriod.anchor.setTo(0.5, 0);
-    game.physics.enable(good_guy, Phaser.Physics.ARCADE);
-    game.physics.enable(other_guy, Phaser.Physics.ARCADE);
-    game.physics.arcade.enable(good_guy);
-    game.physics.arcade.enable(other_guy);
-    //earth.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
-    good_guy.body.collideWorldBounds = true;
-    //earth.body.bounce.set(1);
-    other_guy.body.collideWorldBounds = true;
-    other_guy.body.immovable = true;
-    keys = game.input.keyboard.createCursorKeys();
-    space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    // Anchor the sprite at its center, as opposed to its top-left corner.
-    // so it will be truly centered.
-    //bouncy.anchor.setTo( 0.5, 0.5 );
-    tool = game.add.weapon(30, 'bullet');
-    tool.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    
-    //  The speed at which the bullet is fired
-    tool.bulletSpeed = 450;
-    
-    //  Speed-up the rate of fire, allowing them to shoot 1 bullet every 60ms
-    tool.fireRate = 200;
-    
-    
-    
-    
-    //  Tell the Weapon to track the 'player' Sprite
-    //  With no offsets from the position
-    //  But the 'true' argument tells the weapon to track sprite rotation
-    tool.trackSprite(good_guy, 60, 50, true);
-    
-    
-    
-    
-    other_tool = game.add.weapon(30, 'other_bullet');
-    other_tool.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
-    
-    //  The speed at which the bullet is fired
-    other_tool.bulletSpeed = -200;
-    other_tool.fireRate = 300;
-    other_tool.trackSprite(other_guy, 60, 50, true);
-    
-    
-    laser = game.add.audio('laser');
+    heart = game.add.sprite(xLocation[0], yLocation[0], 'cardBack');
     
     
     
