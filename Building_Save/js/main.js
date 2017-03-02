@@ -23,6 +23,7 @@ window.onload = function() {
     game.load.image('brick', 'assets/brick.jpg');
     game.load.image('ball', 'assets/ball.png');
     game.load.image('tree', 'assets/tree.gif');
+    game.load.audio('laser', 'assets/punch.mp3');
     
   }
   
@@ -33,7 +34,7 @@ window.onload = function() {
   var trees;
   var space;
   var ball1= true;
-  
+  var laser;
   var lives = 3;
   var score = 0;
   var text;
@@ -43,6 +44,7 @@ window.onload = function() {
   var lives1;
   var start;
   var game1= false;
+  var game2= false;
   
   var background;
   
@@ -93,14 +95,15 @@ window.onload = function() {
     lives1 = game.add.text(700, 0, 'lives: 3', style);
     start = game.add.text(game.world.centerX, 400, 'Press the spacebar to start', style);
     start.anchor.setTo(0.5, 0.5);
-    
+    laser = game.add.audio('laser');
     
   }
   
   function update () {
-    if (space.isDown && game1== false)
+    if (space.isDown && game1== false && game2== false)
     {
       ball_go();
+      
       
     }
     if(ball.y>610){
@@ -134,6 +137,7 @@ window.onload = function() {
   
   function ball_and_building (ball, building){
     score+= 10;
+    laser.play();
     building.kill();
     var tree = game.add.sprite(building.x, building.y, 'tree');
   }
@@ -149,7 +153,7 @@ window.onload = function() {
     {
       ball1= true;
       ball.body.x = brick.x;
-      
+      game2= false;
       ball.reset(brick.body.x + 16, brick.y - 16);
       
     }
@@ -180,7 +184,7 @@ window.onload = function() {
     ball1= false;
     ball.body.velocity.y = -290;
     ball.body.velocity.x = -90;
-    
+    game2= true;
     start.visible = false;
     
     
