@@ -34,6 +34,7 @@ var Game5 = {};
   this.text;
   this.score= 0;
   this.points;
+  this.level;
   this.game_over= false;
   this.good_guy;
   this.other_guy;
@@ -45,6 +46,7 @@ var Game5 = {};
   this.bullets;
   this.bullet;
   this.bullet_time= 0;
+  this.brick;
   this.win_text;
   this.laser;
 
@@ -64,6 +66,7 @@ Game5.StateA.prototype = {
     this.load.image( 'bullet', 'assets/bullet.png' );
     this.load.image( 'other_bullet', 'assets/other_bullet.png' );
     this.load.image( 'background', 'assets/background.jpg' );
+    this.load.image( 'brick', 'assets/brick1.jpg' );
     this.load.audio('laser', 'assets/laser.wav');
   },
   
@@ -132,13 +135,14 @@ Game5.StateA.prototype = {
     // Center it in X, and position its top 15 pixels from the top of the world.
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
     this.points = this.add.text(0,0,'Score:', style);
+    this.level = this.add.text(700,0,'Level: 1', style);
     this.text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Loose', style);
     this.text.visible = false;
     this.win_text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Win', style);
     this.win_text.visible = false;
   },
   
-  
+
   update: function () {
     // Accelerate the 'logo' sprite towards the cursor,
     // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
@@ -208,7 +212,7 @@ Game5.StateA.prototype = {
   
   gotoStateB: function () {
 
-        this.game.state.start('StateB');
+        this.game.state.start('StateB',this.score);
 
     }
   
@@ -269,20 +273,24 @@ Game5.StateA.prototype = {
 
 
 
-  Game5.StateB = function (game) {
+  Game5.StateB = function (game,score) {
 
     this. bouncy;
   this.text;
-  this.score= 0;
+  this.score= score;
   this.points;
+  this.level;
   this.game_over= false;
   this.good_guy;
   this.other_guy;
+  this.other_guy1;
+  this.other_guys= 2;
   this.background;
   this.keys;
   this.space;
   this.tool;
   this.other_tool;
+  this.other_tool1;
   this.bullets;
   this.bullet;
   this.bullet_time= 0;
@@ -304,7 +312,7 @@ Game5.StateB.prototype = {
     this.load.image( 'other_guy', 'assets/other_guy.png' );
     this.load.image( 'bullet', 'assets/bullet.png' );
     this.load.image( 'other_bullet', 'assets/other_bullet.png' );
-    this.load.image( 'background', 'assets/background.jpg' );
+    this.load.image( 'background', 'assets/background1.jpg' );
     this.load.audio('laser', 'assets/laser.wav');
   },
   
@@ -316,18 +324,21 @@ Game5.StateB.prototype = {
     
     this.good_guy = this.add.sprite(0, 600, 'good_guy' );
     this.other_guy = this.add.sprite(700, 500, 'other_guy');
-    
+    this.other_guy1 = this.add.sprite(700, 0, 'other_guy');
     
     //asteriod.anchor.setTo(0.5, 0);
     this.physics.enable(this.good_guy, Phaser.Physics.ARCADE);
     this.physics.enable(this.other_guy, Phaser.Physics.ARCADE);
     this.physics.arcade.enable(this.good_guy);
     this.physics.arcade.enable(this.other_guy);
+    this.physics.arcade.enable(this.other_guy1);
     //earth.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
     this.good_guy.body.collideWorldBounds = true;
     //earth.body.bounce.set(1);
     this.other_guy.body.collideWorldBounds = true;
     this.other_guy.body.immovable = true;
+    this.other_guy1.body.collideWorldBounds = true;
+    this.other_guy1.body.immovable = true;
     this.keys = this.input.keyboard.createCursorKeys();
     this.space = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     // Anchor the sprite at its center, as opposed to its top-left corner.
@@ -362,6 +373,14 @@ Game5.StateB.prototype = {
     this.other_tool.trackSprite(this.other_guy, 60, 50, true);
     
     
+    this.other_tool1 = this.add.weapon(30, 'other_bullet');
+    this.other_tool1.bulletKillType = Phaser.Weapon.KILL_WORLD_BOUNDS;
+    
+    //  The speed at which the bullet is fired
+    this.other_tool1.bulletSpeed = -200;
+    this.other_tool1.fireRate = 300;
+    this.other_tool1.trackSprite(this.other_guy1, 60, 50, true);
+    
     this.laser = this.add.audio('laser');
     
     // Turn on the arcade physics engine for this sprite.
@@ -373,6 +392,7 @@ Game5.StateB.prototype = {
     // Center it in X, and position its top 15 pixels from the top of the world.
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
     this.points = this.add.text(0,0,'Score:', style);
+    this.level = this.add.text(700,0,'Level: 2', style);
     this.text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Loose', style);
     this.text.visible = false;
     this.win_text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Win', style);
@@ -389,6 +409,7 @@ Game5.StateB.prototype = {
       this.score+= 1;
       if(Math.random()>.9){
         this.other_tool.fire();
+        this.other_tool1.fire();
       }
       
       this.good_guy.body.velocity.x = 0;
@@ -396,11 +417,20 @@ Game5.StateB.prototype = {
       
       this.other_guy.body.velocity.x = 0;
       this.other_guy.body.velocity.y = 0;
+      
+      
+      
+      this.other_guy1.body.velocity.x = 0;
+      this.other_guy1.body.velocity.y = 0;
+      
+      
       if(Math.random()>.5){
         this.other_guy.body.velocity.y = Math.random()*1000;
+        this.other_guy1.body.velocity.y = Math.random()*1000;
       }
       else{
         this.other_guy.body.velocity.y = -(Math.random()*1000);
+        this.other_guy1.body.velocity.y = -(Math.random()*1000);
       }
       if (this.keys.left.isDown && this.game_over==false)
       {
@@ -428,16 +458,36 @@ Game5.StateB.prototype = {
       }
       
       this.physics.arcade.overlap(this.tool.bullets, this.other_guy, this.bullet_enemy, null, this);
+      this.physics.arcade.overlap(this.tool.bullets, this.other_guy1, this.bullet_enemy1, null, this);
       this.physics.arcade.overlap(this.other_tool.bullets, this.good_guy, this.bullet_guy, null, this);
-      
+      this.physics.arcade.overlap(this.other_tool1.bullets, this.good_guy, this.bullet_guy, null, this);
     }
   },
   bullet_enemy: function () {
     this.other_guy.kill();
+    this.other_tool.bullets.visible= false;
+    if(this.other_guys== 0){
     this.win_text.visible = true;
     this.game_over= true;
     this.tool.bullets.visible= false;
-    this.other_tool.bullets.visible= false;
+    //this.other_tool.bullets.visible= false;
+    }
+    else{
+        this.other_guys+= -1;
+        }
+  },
+  bullet_enemy1: function () {
+    this.other_guy1.kill();
+    this.other_tool1.bullets.visible= false;
+    if(this.other_guys== 0){
+    this.win_text.visible = true;
+    this.game_over= true;
+    this.tool.bullets.visible= false;
+    //this.other_tool.bullets.visible= false;
+    }
+    else{
+        this.other_guys+= -1;
+        }
   },
   bullet_guy: function () {
     this.good_guy.kill();
