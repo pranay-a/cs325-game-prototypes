@@ -289,6 +289,8 @@ Game5.StateA.prototype = {
   this.good_guy;
   this.other_guy;
   this.other_guy1;
+  this.other1_guy= true;
+  this.other1_guy1= true;
   this.other_guys= 2;
   this.background;
   this.keys;
@@ -460,8 +462,19 @@ Game5.StateB.prototype = {
         
         
       if(Math.random()>.9){
+        if(this.other1_guy== true && this.other1_guy1== true){
         this.other_tool.fire();
         this.other_tool1.fire();
+        }
+        else if(this.other1_guy== true && this.other1_guy1== false){
+        this.other_tool.fire();
+        }
+        else if(this.other1_guy== false && this.other1_guy1== true){
+        this.other_tool1.fire();
+        }
+        else if(this.other1_guy== false && this.other1_guy1== false){
+        this.game_over= true;
+        }
       }
       
       this.good_guy.body.velocity.x = 0;
@@ -524,11 +537,11 @@ Game5.StateB.prototype = {
   },
   bullet_enemy: function () {
     this.other_guy.kill();
-    this.other_tool.bullets.visible= false;
+    this.other1_guy= false;
+    //this.other_tool.bullets.visible= false;
     if(this.other_guys== 0){
     this.win_text.visible = true;
     this.game_over= true;
-    this.tool.bullets.visible= false;
     this.other_guys+= -1;
     //this.other_tool.bullets.visible= false;
     }
@@ -538,11 +551,12 @@ Game5.StateB.prototype = {
   },
   bullet_enemy1: function () {
     this.other_guy1.kill();
+    this.other1_guy1= false;
     this.other_tool1.bullets.visible= false;
     if(this.other_guys== 0){
     this.win_text.visible = true;
     this.game_over= true;
-    this.tool.bullets.visible= false;
+   
     this.other_guys+= -1;
     //this.other_tool.bullets.visible= false;
     }
@@ -582,7 +596,6 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game');
 
 game.state.add('StateA', Game5.StateA);
 game.state.add('StateB', Game5.StateB);
-//game.state.add('StateC', Game5.StateC);
 
 game.state.start('StateA');
 
