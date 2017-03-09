@@ -2,7 +2,7 @@
 
 var Game5 = {};
 
-
+var score= 0;
 
 
 
@@ -32,7 +32,7 @@ var Game5 = {};
 
     this. bouncy;
   this.text;
-  this.score= 0;
+  //this.score= 0;
   this.points;
   this.level;
   this.game_over= false;
@@ -147,9 +147,14 @@ Game5.StateA.prototype = {
     // Accelerate the 'logo' sprite towards the cursor,
     // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
     // in X or Y.
-    this.points.text= "Score: "+ this.score;
+    this.points.text= "Score: "+ score;
+    this.good_guy.body.velocity.x = 0;
+      this.good_guy.body.velocity.y = 0;
+      
+      this.other_guy.body.velocity.x = 0;
+      this.other_guy.body.velocity.y = 0;
     if(this.game_over== false){
-      this.score+= 1;
+      score+= 1;
       if(Math.random()>.9){
         this.other_tool.fire();
       }
@@ -212,7 +217,7 @@ Game5.StateA.prototype = {
   
   gotoStateB: function () {
 
-        this.game.state.start('StateB',this.score);
+        this.game.state.start('StateB', this.score);
 
     }
   
@@ -273,11 +278,11 @@ Game5.StateA.prototype = {
 
 
 
-  Game5.StateB = function (game,score) {
+  Game5.StateB = function (game) {
 
     this. bouncy;
   this.text;
-  this.score= score;
+  //this.score= score;
   this.points;
   this.level;
   this.game_over= false;
@@ -294,6 +299,9 @@ Game5.StateA.prototype = {
   this.bullets;
   this.bullet;
   this.bullet_time= 0;
+  this.brick;
+  this.brick1= false;
+  this.timer== 2000;
   this.win_text;
   this.laser;
 
@@ -313,6 +321,7 @@ Game5.StateB.prototype = {
     this.load.image( 'bullet', 'assets/bullet.png' );
     this.load.image( 'other_bullet', 'assets/other_bullet.png' );
     this.load.image( 'background', 'assets/background1.jpg' );
+    this.load.image( 'brick', 'assets/brick.png' );
     this.load.audio('laser', 'assets/laser.wav');
   },
   
@@ -381,6 +390,21 @@ Game5.StateB.prototype = {
     this.other_tool1.fireRate = 300;
     this.other_tool1.trackSprite(this.other_guy1, 60, 50, true);
     
+    
+    
+    this.timer = game.time.create(false);
+
+    //  Set a TimerEvent to occur after 2 seconds
+    this.timer.loop(1000, this.update_brick, this);
+
+    //  Start the timer running - this is important!
+    //  It won't start automatically, allowing you to hook it to button events and the like.
+    this.timer.start();
+    
+   
+    
+    
+    
     this.laser = this.add.audio('laser');
     
     // Turn on the arcade physics engine for this sprite.
@@ -391,8 +415,8 @@ Game5.StateB.prototype = {
     // Add some text using a CSS style.
     // Center it in X, and position its top 15 pixels from the top of the world.
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
-    this.points = this.add.text(0,0,'Score:', style);
-    this.level = this.add.text(700,0,'Level: 2', style);
+    this.points = this.add.text(0,10,'Score:', style);
+    this.level = this.add.text(700,10,'Level: 2', style);
     this.text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Loose', style);
     this.text.visible = false;
     this.win_text = this.add.text(this.world.centerX, this.world.centerY, 'Game Over You Win', style);
@@ -404,9 +428,37 @@ Game5.StateB.prototype = {
     // Accelerate the 'logo' sprite towards the cursor,
     // accelerating at 500 pixels/second and moving no faster than 500 pixels/second
     // in X or Y.
-    this.points.text= "Score: "+ this.score;
+    this.points.text= "Score: "+ score;
+    this.good_guy.body.velocity.x = 0;
+      this.good_guy.body.velocity.y = 0;
+      
+      this.other_guy.body.velocity.x = 0;
+      this.other_guy.body.velocity.y = 0;
+      
+      
+      
+      this.other_guy1.body.velocity.x = 0;
+      this.other_guy1.body.velocity.y = 0;
     if(this.game_over== false){
-      this.score+= 1;
+      score+= 1;
+      /*if(score== 500){
+        this.brick= this.add.sprite(400, 0, 'brick' );
+    this.physics.enable(this.brick, Phaser.Physics.ARCADE);
+    this.physics.arcade.enable(this.brick);
+    this.other_guy.body.immovable = true;
+    this.brick1= true;
+    }*/
+    if(this.other_guys== 0){
+        this.game_over= true;
+        //this.brick.visible= false;
+        this.win_text.visible = true;
+        }
+      if(this.brick1==true && this.game_over== false){
+        this.brick.body.velocity.y = 200;
+        }
+        
+        
+        
       if(Math.random()>.9){
         this.other_tool.fire();
         this.other_tool1.fire();
@@ -461,6 +513,13 @@ Game5.StateB.prototype = {
       this.physics.arcade.overlap(this.tool.bullets, this.other_guy1, this.bullet_enemy1, null, this);
       this.physics.arcade.overlap(this.other_tool.bullets, this.good_guy, this.bullet_guy, null, this);
       this.physics.arcade.overlap(this.other_tool1.bullets, this.good_guy, this.bullet_guy, null, this);
+      
+      
+      
+      this.physics.arcade.collide(this.tool.bullets, this.brick, this.brick_1 ,null, this);
+      this.physics.arcade.collide(this.other_tool.bullets, this.brick, this.brick_1, null, this);
+      this.physics.arcade.collide(this.other_tool1.bullets, this.brick, this.brick_1, null, this);
+      
     }
   },
   bullet_enemy: function () {
@@ -470,6 +529,7 @@ Game5.StateB.prototype = {
     this.win_text.visible = true;
     this.game_over= true;
     this.tool.bullets.visible= false;
+    this.other_guys+= -1;
     //this.other_tool.bullets.visible= false;
     }
     else{
@@ -483,6 +543,7 @@ Game5.StateB.prototype = {
     this.win_text.visible = true;
     this.game_over= true;
     this.tool.bullets.visible= false;
+    this.other_guys+= -1;
     //this.other_tool.bullets.visible= false;
     }
     else{
@@ -495,7 +556,19 @@ Game5.StateB.prototype = {
     this.game_over= true;
     this.tool.bullets.visible= false;
     this.other_tool.bullets.visible= false;
-  }
+  },
+  update_brick: function () {
+  if(this.game_over== false){
+    this.brick= this.add.sprite(400, 0, 'brick' );
+    this.physics.enable(this.brick, Phaser.Physics.ARCADE);
+    this.physics.arcade.enable(this.brick);
+    this.other_guy.body.immovable = true;
+    this.brick1= true;
+    }
+    },
+    brick_1: function (bullet) {
+        bullet.kill();
+        }
   
   
   
