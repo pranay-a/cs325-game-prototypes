@@ -871,11 +871,7 @@ Game5.State7.prototype = {
         this.gotoState12();
         
       }
-      if (this.no.isDown)
-      {
-        this.gotoState12();
-        
-      }
+      
       
      
   },
