@@ -20,8 +20,9 @@ window.onload = function() {
     
     game.load.image('car', 'assets/car.png');
     game.load.image('car_object', 'assets/car_object.png');
-    game.load.image('background', 'assets/background.jpg');
-    //game.load.audio('laser', 'assets/punch.mp3');
+    game.load.image('background', 'assets/background_1.jpg');
+    game.load.audio('laser', 'assets/sound.mp3');
+    game.load.audio('sound', 'assets/sound2.mp3');
     
   }
   
@@ -51,7 +52,10 @@ window.onload = function() {
   var cursors;
 
   var zombie;
-
+  var car_other1;
+  var car_other2;
+  var sound;
+  var sound2;
  
 
   var itemCounter = 0;
@@ -59,7 +63,7 @@ window.onload = function() {
   var game_over= false;
   var game_over_with_lives= false;
   var game_end;
-  var scoreCounter = 0;
+  var scoreCounter = 100;
   var zombieCounter = 0;
   var playerHealth = 5;
   var spawnCounter = 0;
@@ -78,96 +82,100 @@ window.onload = function() {
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'car');
     game.physics.enable(player, Phaser.Physics.ARCADE);
     game.physics.arcade.enable(player);
-    createEnemy();
+    player.body.collideWorldBounds = true;
     createEnemy();
 
-    cursors = game.input.keyboard.createCursorKeys();
-
+    keys = game.input.keyboard.createCursorKeys();
+    sound = game.add.audio('laser');
+    sound.play();
+    sound2 = game.add.audio('sound');
     game.camera.follow(player);
 
 
     
     var style = { font: "25px Verdana", fill: "#ffffff", align: "center" };
-    text = game.add.text(0,0,'Score:', style);
-    game_end = game.add.text(game.world.centerX, game.world.centerY, 'Game Over', style);
+    text = game.add.text(0,0,'Score: ', style);
+    game_end = game.add.text(500, 500, 'Game Over', style);
     //text.anchor.setTo(0.5, 0.5);
     text.fixedToCamera = true;
     lives1 = game.add.text(700, 0, 'lives: 3', style);
     lives1.fixedToCamera = true;
     game_end.visible = false;
+    game_end.fixedToCamera = true;
     
 
    
     
+    
   }
   
   function update () {
-    lives1.text= 'lives '+ lives;
+    lives1.text= 'lives: '+ lives;
+    text.text= 'Score: '+ score;
+    if(score> scoreCounter){
+        car_other1.body.velocity.setTo(Math.random()*500,(-Math.random()*800)+100);
+   car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+   scoreCounter+= 100;
+   }
     if(game_over== true){
         player.kill();
+        car_other1.kill();
+        car_other2.kill();
+        sound.stop();
         game_end.visible = true;
         }
     if(game_over_with_lives== true){
-        zombie.kill();
-        zombie.kill();
-        zombie.kill();
         game_over_with_lives= false;
-        createEnemy();
-        createEnemy();
         }
-    if (cursors.up.isDown)
-    {
-      player.body.velocity.y = -300;
-      console.log("up");
-    }
-    else if (cursors.down.isDown)
-    {
-      player.body.velocity.y = 300;
-    }
-    if (cursors.left.isDown)
-    {
-      player.body.velocity.x = -300;
-      
-    }
-    else if (cursors.right.isDown)
-    {
-      player.body.velocity.x = 300;
-    }
-    else{
-      player.body.velocity.x = 0;
+        player.body.velocity.x = 0;
       player.body.velocity.y = 0;
-    }
-    
-    accelerateToObject(zombie, player, 250);
-    game.physics.arcade.collide(player, zombie, player_and_zombie, null, this);
+    if (keys.left.isDown)
+      {
+        player.body.velocity.x = -300;
+        
+      }
+      else if (keys.right.isDown)
+      {
+        player.body.velocity.x = 300;
+      }
+      
+      if (keys.up.isDown)
+      {
+        player.body.velocity.y = -300;
+      }
+      else if (keys.down.isDown)
+      {
+        player.body.velocity.y = 200;
+      }
+     
+    game.physics.arcade.collide(player, car_other1, player_and_car_other_1, null, this);
+    game.physics.arcade.collide(player, car_other2, player_and_car_other_2, null, this);
+    game.physics.arcade.collide(car_other1, car_other2, car_other_1_and_car_other_2, null, this);
     
   }
    
   function createEnemy()
  {
-   zombie = game.add.sprite(game.world.randomX, game.world.randomY, 'car_object');
-   game.physics.enable(zombie, Phaser.Physics.ARCADE);
-   
-   zombie.body.fixedRotation = true;
-   //accelerateToObject(zombie, player, 250);
-   //player.body.createBodyCallback(zombie, playerDamage, this);
-   spawnCounter = 0;
+   car_other1 = game.add.sprite(game.world.randomX, game.world.randomY, 'car_object');
+   car_other2 = game.add.sprite(game.world.randomX, game.world.randomY, 'car_object');
+   game.physics.enable(car_other1, Phaser.Physics.ARCADE);
+   game.physics.enable(car_other2, Phaser.Physics.ARCADE);
+   car_other1.body.bounce.set(1);
+   car_other2.body.bounce.set(1);
+   car_other1.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+   car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+   car_other1.body.collideWorldBounds = true;
+   car_other2.body.collideWorldBounds = true;
+
  }
  
- function accelerateToObject(object1, object2, speed)
- {
-   if (typeof speed === 'undefined')
-   {
-     speed = 60;
-   }
-    var angle = Math.atan2(object2.y - object1.y, object2.x - object1.x);
-    object1.body.rotation = angle + game.math.degToRad(90);
-    object1.body.force.x = Math.cos(angle) * speed;
-    object1.body.force.y = Math.sin(angle) * speed;
- }
-  function player_and_zombie (player, zombie){
+ 
+  function player_and_car_other_1 (player, car_other1){
     //player.kill();
-    zombie.kill();
+    car_other1.kill();
+    car_other1.revive();
+    car_other1.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+    sound2.play();
     lives--;
     if(lives== 0){
         game_over= true;
@@ -175,7 +183,41 @@ window.onload = function() {
     else{
         game_over_with_lives= true;
         }
-    console.log("Player and Zombie");
+    
+    }
+    
+    function player_and_car_other_2 (player, car_other2){
+    //player.kill();
+    car_other2.kill();
+    car_other2.revive();
+    car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+    sound2.play();
+    lives--;
+    if(lives== 0){
+        game_over= true;
+        }
+    else{
+        game_over_with_lives= true;
+        }
+   
+    }
+    function car_other_1_and_car_other_2 (car_other1, car_other2){
+    //player.kill();
+    car_other1.kill();
+    car_other2.kill();
+    car_other1.revive();
+    car_other2.revive();
+    car_other1.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+   car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
+    
+    score+= 10;
+    if(lives== 0){
+        game_over= true;
+        }
+    else{
+        game_over_with_lives= true;
+        }
+  
     }
   
   
