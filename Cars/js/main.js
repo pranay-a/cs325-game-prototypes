@@ -142,7 +142,7 @@ window.onload = function() {
     game.physics.arcade.collide(player, zombie, player_and_zombie, null, this);
     
   }
-  
+   
   function createEnemy()
  {
    zombie = game.add.sprite(game.world.randomX, game.world.randomY, 'car_object');
