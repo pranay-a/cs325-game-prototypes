@@ -45,7 +45,6 @@ window.onload = function() {
   var background;
 
   var player;
-  //var playerSpeed;
   var cursors;
 
   var zombie;
@@ -72,8 +71,6 @@ window.onload = function() {
     
     background = game.add.tileSprite(0, 0, 1600, 600, 'background');
     game.world.setBounds(0, 0, 1600, 600);
-    //game.physics.startSystem(Phaser.Physics.P2JS);
-    //game.physics.p2.restitution = 0.9;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     //game.physics.arcade.checkCollision.down = false;
     player = game.add.sprite(game.world.centerX, game.world.centerY, 'car');
@@ -168,7 +165,6 @@ window.onload = function() {
  
  
   function player_and_car_other_1 (player, car_other1){
-    //player.kill();
     car_other1.kill();
     car_other1.revive();
     car_other1.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -184,7 +180,6 @@ window.onload = function() {
     }
     
     function player_and_car_other_2 (player, car_other2){
-    //player.kill();
     car_other2.kill();
     car_other2.revive();
     car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -199,7 +194,6 @@ window.onload = function() {
    
     }
     function car_other_1_and_car_other_2 (car_other1, car_other2){
-    //player.kill();
     car_other1.kill();
     car_other2.kill();
     car_other1.revive();
