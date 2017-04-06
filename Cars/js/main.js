@@ -97,9 +97,6 @@ window.onload = function() {
     game_end.fixedToCamera = true;
     
 
-   
-    
-    
   }
   
   function update () {
