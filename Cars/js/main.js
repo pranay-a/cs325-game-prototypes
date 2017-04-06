@@ -29,9 +29,6 @@ window.onload = function() {
   var ball;
   var brick;
   var keys;
-  var buildings;
-  var trees;
-  var space;
   var ball1= true;
   var laser;
   var lives = 3;
