@@ -52,10 +52,9 @@ window.onload = function() {
   var car_other2;
   var sound;
   var sound2;
+  var timer= 0;
  
 
-  var itemCounter = 0;
-  var ememy_number= 2;
   var game_over= false;
   var game_over_with_lives= false;
   var game_end;
@@ -106,6 +105,13 @@ window.onload = function() {
   function update () {
     lives1.text= 'lives: '+ lives;
     text.text= 'Score: '+ score;
+    if(game.time.totalElapsedSeconds()>1){
+    timer++;
+    if(timer> 500){
+    car_other1.body.velocity.setTo(Math.random()*500,(-Math.random()*800)+100);
+   car_other2.body.velocity.setTo(Math.random()*900,(-Math.random()*800)+100);
+   timer= 18;
+   }
     if(score> scoreCounter){
         car_other1.body.velocity.setTo(Math.random()*500,(-Math.random()*800)+100);
    car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -145,7 +151,7 @@ window.onload = function() {
     game.physics.arcade.collide(player, car_other1, player_and_car_other_1, null, this);
     game.physics.arcade.collide(player, car_other2, player_and_car_other_2, null, this);
     game.physics.arcade.collide(car_other1, car_other2, car_other_1_and_car_other_2, null, this);
-    
+    }
   }
    
   function createEnemy()
@@ -165,6 +171,7 @@ window.onload = function() {
  
  
   function player_and_car_other_1 (player, car_other1){
+    if(timer>15){
     car_other1.kill();
     car_other1.revive();
     car_other1.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -176,10 +183,13 @@ window.onload = function() {
     else{
         game_over_with_lives= true;
         }
+    timer= 0;
+    }
     
     }
     
     function player_and_car_other_2 (player, car_other2){
+    if(timer>15){
     car_other2.kill();
     car_other2.revive();
     car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -191,9 +201,12 @@ window.onload = function() {
     else{
         game_over_with_lives= true;
         }
+        timer= 0;
+    }
    
     }
     function car_other_1_and_car_other_2 (car_other1, car_other2){
+    if(timer>15){
     car_other1.kill();
     car_other2.kill();
     car_other1.revive();
@@ -208,7 +221,8 @@ window.onload = function() {
     else{
         game_over_with_lives= true;
         }
-  
+        timer= 0;
+    }
     }
   
   
