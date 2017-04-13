@@ -168,6 +168,7 @@ window.onload = function() {
         //player.angle= 90;
       }
      
+     
     game.physics.arcade.collide(player, car_other1, player_and_car_other_1, null, this);
     game.physics.arcade.collide(player, car_other2, player_and_car_other_2, null, this);
     game.physics.arcade.collide(car_other1, car_other2, car_other_1_and_car_other_2, null, this);
