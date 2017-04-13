@@ -95,7 +95,7 @@ window.onload = function() {
     var style = { font: "25px Verdana", fill: "#ffffff", align: "center" };
     text = game.add.text(0,0,'Score: ', style);
     level = game.add.text(400,0,'Level: 1', style);
-    game_end = game.add.text(50, 500, 'Game Over Your score is ', style);£
+    game_end = game.add.text(50, 500, 'Game Over Your score is ', style);
     //text.anchor.setTo(0.5, 0.5);
     text.fixedToCamera = true;
     level.fixedToCamera = true;
@@ -207,7 +207,7 @@ window.onload = function() {
  
  
   function player_and_car_other_1 (player, car_other1){
-    if(timer>30){
+    if(timer>40){
     car_other1.kill();
     animation1.play();
     car_other1.revive();
@@ -226,7 +226,7 @@ window.onload = function() {
     }
     
     function player_and_car_other_2 (player, car_other2){
-    if(timer>30){
+    if(timer>40){
     car_other2.kill();
     car_other2.revive();
     car_other2.body.velocity.setTo(Math.random()*800,(-Math.random()*800)+100);
@@ -242,7 +242,7 @@ window.onload = function() {
     }
     }
     function player_and_car_other_3 (player, car_other3){
-    if(timer>30){
+    if(timer>40){
     car_other3.kill();
     animation1.play();
     car_other3.revive();
