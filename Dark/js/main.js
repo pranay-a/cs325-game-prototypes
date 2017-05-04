@@ -12,8 +12,7 @@ var score= 0;
 
 
 
-var pong_like= false;
-var pong_won= false;
+
 var math_like= false;
 var math_score= 0;
 var sound;
