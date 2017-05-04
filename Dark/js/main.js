@@ -16,7 +16,7 @@ var pong_like= false;
 var pong_won= false;
 var math_like= false;
 var math_score= 0;
-
+var sound;
 
 
 
@@ -78,6 +78,7 @@ Game5.State1.prototype = {
     
     this.load.image( 'background', 'assets/background.jpg' );
     this.load.image( 'button2', 'assets/button_start.png' );
+    game.load.audio('laser', 'assets/background_music.mp3');
     
   },
   
@@ -105,6 +106,8 @@ Game5.State1.prototype = {
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
     this.points = this.add.text(155,100,'In this game you are trying to find the\nman that only is visible sometimes.', style);
     this.level = this.add.text(230,0,'        Man in the dark', style);
+    sound = game.add.audio('laser');
+    sound.play();
     
    
   },
@@ -639,7 +642,7 @@ Game5.State5.prototype = {
     var style = { font: "25px Verdana", fill: "#000000", align: "center" };
     this.points = this.add.text(155,100,'Game Over You win\nYou defeated the man trying to get away ', style);
     this.level = this.add.text(230,0,'        Man in the dark', style);
-    
+    sound.stop();
    
   },
   
